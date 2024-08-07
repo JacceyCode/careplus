@@ -7,17 +7,19 @@ import {
   updateAppointment,
 } from "@/lib/actions/appointment.actions";
 import { getAppointmentSchema } from "@/lib/formValidation";
+import { Appointment } from "@/types/appwrite.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import CustomFormField from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
+import { Button } from "../ui/button";
 import { SelectItem } from "../ui/select";
 import { FormFieldType } from "./PatientForm";
-import { Appointment } from "@/types/appwrite.types";
 
 const AppointmentForm = ({
   type,
@@ -133,11 +135,17 @@ const AppointmentForm = ({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 flex-1">
         {type === "create" && (
-          <section className="mb-12 space-y-4">
-            <h1 className="header">New Appointment</h1>
-            <p className="text-dark-700">
-              Request a new appointment in 10 seconds.
-            </p>
+          <section className="mb-12 flex gap-4 flex-col lg:flex-row lg:justify-between">
+            <section className="space-y-4">
+              <h1 className="header">New Appointment</h1>
+              <p className="text-dark-700">
+                Request a new appointment in 10 seconds.
+              </p>
+            </section>
+
+            <Button variant="outline" className="shad-primary-btn" asChild>
+              <Link href={`/patients/${userId}`}>Return to Dashboard</Link>
+            </Button>
           </section>
         )}
 

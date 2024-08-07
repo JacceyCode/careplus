@@ -1,9 +1,9 @@
-import PatientForm from "@/components/forms/PatientForm";
+import LoginForm from "@/components/forms/LoginForm";
 import PasskeyModal from "@/components/PasskeyModal";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Home({ searchParams }: SearchParamProps) {
+export default function Login({ searchParams }: SearchParamProps) {
   const isAdmin = searchParams.admin === "true";
 
   return (
@@ -20,7 +20,7 @@ export default function Home({ searchParams }: SearchParamProps) {
             className="mb-12 h-10 w-fit"
           />
 
-          <PatientForm />
+          <LoginForm />
 
           <div className="text-14-regular mt-14 flex items-center justify-between">
             <p className="justify-items-end text-dark-600 xl:text-left">
@@ -29,10 +29,10 @@ export default function Home({ searchParams }: SearchParamProps) {
 
             <section className="flex items-center gap-3">
               <Link
-                href="/login"
+                href="/"
                 className="text-green-500 border rounded-md border-green-500 px-5 py-1 hover:text-white hover:bg-green-500 transition-all"
               >
-                Sign In
+                Sign Up
               </Link>
               <Link
                 href="/?admin=true"
