@@ -26,21 +26,23 @@ import { FormFieldType } from "./PatientForm";
 const RegisterForm = ({ user }: { user: User }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof PatientFormValidation>>({
     resolver: zodResolver(PatientFormValidation),
     defaultValues: {
       ...PatientFormDefaultValues,
-      name: "",
-      email: "",
-      phone: "",
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
     },
   });
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof PatientFormValidation>) {
     setIsLoading(true);
+    setError(null);
 
     /// for uploaded images
     let formData;
@@ -67,9 +69,12 @@ const RegisterForm = ({ user }: { user: User }) => {
 
       const patient = await registerPatient(patientData);
 
-      if (patient) router.push(`/patients/${user.$id}/new-appointment`);
-    } catch (error) {
+      if (!patient) throw new Error("Error saving record. Please try again");
+
+      router.push(`/patients/${user.$id}`);
+    } catch (error: any) {
       console.log(error);
+      setError(error.message);
     } finally {
       setIsLoading(false);
     }
@@ -97,7 +102,6 @@ const RegisterForm = ({ user }: { user: User }) => {
           control={form.control}
           name="name"
           label="Full Name"
-          placeholder={user?.name}
           iconSrc="/assets/icons/user.svg"
           iconAlt="user"
         />
@@ -108,7 +112,6 @@ const RegisterForm = ({ user }: { user: User }) => {
             control={form.control}
             name="email"
             label="Email"
-            placeholder={user?.email}
             iconSrc="/assets/icons/email.svg"
             iconAlt="email"
           />
@@ -118,7 +121,6 @@ const RegisterForm = ({ user }: { user: User }) => {
             control={form.control}
             name="phone"
             label="Phone number"
-            placeholder="(555) 123-4567"
           />
         </div>
 
@@ -341,6 +343,8 @@ const RegisterForm = ({ user }: { user: User }) => {
           name="privacyConsent"
           label="I consent to privacy policy"
         />
+
+        {error && <p className="shad-error">{error}</p>}
 
         <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
       </form>

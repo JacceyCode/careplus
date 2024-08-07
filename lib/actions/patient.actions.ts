@@ -37,6 +37,21 @@ export const createUser = async (user: CreateUserParams) => {
   }
 };
 
+export const loginUser = async (userEmail: string) => {
+  try {
+    const user = await databases.listDocuments(
+      DATABASE_ID!,
+      PATIENT_COLLECTION_ID!,
+      [Query.equal("email", userEmail)]
+    );
+
+    return parseStringify(user.documents[0]);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 export const getUser = async (userId: string) => {
   try {
     const user = await users.get(userId);
@@ -44,6 +59,7 @@ export const getUser = async (userId: string) => {
     return parseStringify(user);
   } catch (error) {
     console.log(error);
+    throw error;
   }
 };
 

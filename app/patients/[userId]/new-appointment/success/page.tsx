@@ -74,11 +74,17 @@ const Success = async ({
           </div>
         </section>
 
-        <Button variant="outline" className="shad-primary-btn" asChild>
-          <Link href={`/patients/${userId}/new-appointment`}>
-            New Appointment
-          </Link>
-        </Button>
+        <section className="flex flex-col md:flex-row items-center gap-3">
+          <Button variant="outline" className="shad-primary-btn" asChild>
+            <Link href={`/patients/${userId}`}>Return to Dashboard</Link>
+          </Button>
+
+          <Button variant="outline" className="shad-primary-btn" asChild>
+            <Link href={`/patients/${userId}/new-appointment`}>
+              New Appointment
+            </Link>
+          </Button>
+        </section>
 
         <p className="copyright">&copy; {new Date().getFullYear()} CarePlus</p>
       </div>

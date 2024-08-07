@@ -8,32 +8,14 @@ import AppointmentModal from "../AppointmentModal";
 import StatusBadge from "../StatusBadge";
 import { Appointment } from "@/types/appwrite.types";
 
-export const columns: ColumnDef<Appointment>[] = [
+export const userColumns: ColumnDef<Appointment>[] = [
   {
     header: "ID",
     cell: ({ row }) => <p className="text-14-medium">{row.index + 1}</p>,
   },
   {
-    accessorKey: "patient",
-    header: "Patient",
-    cell: ({ row }) => {
-      const appointment = row.original;
-
-      return <p className="text-14-medium">{appointment.patient.name}</p>;
-    },
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className="min-w-[115px]">
-        <StatusBadge status={row.original.status} />
-      </div>
-    ),
-  },
-  {
     accessorKey: "schedule",
-    header: "Appointment",
+    header: "Appointment Date",
     cell: ({ row }) => (
       <p className="text-14-regular min-w-[100px]">
         {formatDateTime(row.original.schedule).dateTime}
@@ -64,19 +46,30 @@ export const columns: ColumnDef<Appointment>[] = [
     },
   },
   {
+    accessorKey: "reason",
+    header: "Reason",
+    cell: ({ row }) => {
+      const appointment = row.original;
+
+      return <p className="text-14-medium">{appointment.reason}</p>;
+    },
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => (
+      <div className="min-w-[115px]">
+        <StatusBadge status={row.original.status} />
+      </div>
+    ),
+  },
+  {
     id: "actions",
     header: () => <div className="pl-4">Actions</div>,
     cell: ({ row: { original: data } }) => {
       return (
         <div className="flex gap-1">
-          <AppointmentModal
-            type="schedule"
-            patientId={data.patient.$id}
-            userId={data.userId}
-            appointment={data}
-          />
-
-          {data.status !== "cancelled" && (
+          {data.status === "pending" && (
             <AppointmentModal
               type="cancel"
               patientId={data.patient.$id}
