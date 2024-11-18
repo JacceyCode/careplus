@@ -28,12 +28,25 @@ export const createUser = async (user: CreateUserParams) => {
     return newUser;
   } catch (error: any) {
     if (error && error?.code === 409) {
-      const documents = await users.list([Query.equal("email", [user.email])]);
+      const documents = await users.list([
+        Query.or([
+          Query.equal("email", [user.email]),
+          Query.equal("phone", [user.phone]),
+        ]),
+      ]);
 
+      if (
+        documents.users[0].name.toLocaleLowerCase() !==
+          user.name.toLocaleLowerCase() ||
+        documents.users[0].email !== user.email ||
+        documents.users[0].phone !== user.phone
+      ) {
+        throw error;
+      }
       return documents?.users[0];
     }
 
-    console.error("An error occurred while creating a new user:", error);
+    throw error;
   }
 };
 
