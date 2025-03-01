@@ -57,8 +57,10 @@ export const loginUser = async (userEmail: string) => {
       [Query.equal("email", userEmail)]
     );
 
-    if (user.documents.length === 0)
-      throw new Error("User not found. Please signup for a user account.");
+    if (user.documents.length === 0) {
+      throw { status: "error", message: "User not found. Please sign up." };
+    }
+    // throw new Error("User not found. Please signup for a user account.");
 
     return parseStringify(user.documents[0]);
   } catch (error) {
@@ -71,14 +73,17 @@ export const loginUser = async (userEmail: string) => {
       const documents = await users.list([Query.equal("email", userEmail)]);
 
       if (documents.users.length === 0) {
-        throw new Error("User not found. Please signup for a user account.");
+        throw { status: "error", message: "User not found. Please sign up." };
       }
 
       return parseStringify(documents?.users[0]);
     }
 
     console.error("Unexpected error during login:", error);
-    throw error;
+    throw {
+      status: "error",
+      message: "Something went wrong. Please try again later.",
+    };
   }
 };
 
