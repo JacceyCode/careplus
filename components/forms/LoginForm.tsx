@@ -37,7 +37,8 @@ const LoginForm = () => {
 
       router.push(`/patients/${userId}`);
     } catch (error: any) {
-      setError(error.message);
+      console.error(error);
+      setError("An unexpected error occurred. Please try again or signup.");
     } finally {
       setIsLoading(false);
     }
