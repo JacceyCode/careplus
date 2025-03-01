@@ -52,7 +52,7 @@ const PatientForm = () => {
 
       if (!user) throw new Error("Error creating user.");
 
-      router.push(`/patients/${user.$id}/register`);
+      router.push(`/patients/${user.$id}`);
     } catch (error: any) {
       console.error(error.message);
       setError(error.message);

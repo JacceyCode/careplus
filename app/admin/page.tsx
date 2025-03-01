@@ -2,6 +2,7 @@ import StatCard from "@/components/StatCard";
 import { columns } from "@/components/table/columns";
 import { DataTable } from "@/components/table/DataTable";
 import { getRecentAppointmentList } from "@/lib/actions/appointment.actions";
+import { LogOut } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -24,7 +25,12 @@ const Admin = async () => {
           />
         </Link>
 
-        <p className="text-16-semibold">Admin Dashboard</p>
+        <section className="flex gap-3 items-center">
+          <p className="text-16-semibold !italic">Admin Dashboard</p>
+          <Link href="/login" className="cursor-pointer">
+            <LogOut />
+          </Link>
+        </section>
       </header>
 
       <main className="admin-main">

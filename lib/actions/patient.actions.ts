@@ -1,6 +1,7 @@
 "use server";
 
 import { ID, Query } from "node-appwrite";
+import { InputFile } from "node-appwrite/file";
 import {
   BUCKET_ID,
   DATABASE_ID,
@@ -12,8 +13,6 @@ import {
   users,
 } from "../appwrite.config";
 import { parseStringify } from "../utils";
-
-import { InputFile } from "node-appwrite/file";
 
 export const createUser = async (user: CreateUserParams) => {
   try {
@@ -58,9 +57,27 @@ export const loginUser = async (userEmail: string) => {
       [Query.equal("email", userEmail)]
     );
 
+    if (user.documents.length === 0)
+      throw new Error("User not found. Please signup for a user account.");
+
     return parseStringify(user.documents[0]);
   } catch (error) {
-    console.log(error);
+    if (
+      error instanceof Error &&
+      error.message.includes(
+        "User not found. Please signup for a user account."
+      )
+    ) {
+      const documents = await users.list([Query.equal("email", userEmail)]);
+
+      if (documents.users.length === 0) {
+        throw new Error("User not found. Please signup for a user account.");
+      }
+
+      return parseStringify(documents?.users[0]);
+    }
+
+    console.error("Unexpected error during login:", error);
     throw error;
   }
 };
@@ -71,7 +88,7 @@ export const getUser = async (userId: string) => {
 
     return parseStringify(user);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw error;
   }
 };
@@ -105,7 +122,7 @@ export const registerPatient = async ({
 
     return parseStringify(newPatient);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -119,6 +136,6 @@ export const getPatient = async (userId: string) => {
 
     return parseStringify(patients.documents[0]);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };

@@ -1,6 +1,14 @@
 "use client";
 
+import CustomFormField from "@/components/CustomFormField";
+import FileUploader from "@/components/FileUploader";
+import { FormFieldType } from "@/components/forms/PatientForm";
+import SubmitButton from "@/components/SubmitButton";
+import { Button } from "@/components/ui/button";
 import { Form, FormControl } from "@/components/ui/form";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { SelectItem } from "@/components/ui/select";
 import {
   Doctors,
   GenderOptions,
@@ -11,17 +19,11 @@ import { registerPatient } from "@/lib/actions/patient.actions";
 import { PatientFormValidation } from "@/lib/formValidation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import CustomFormField from "../CustomFormField";
-import FileUploader from "../FileUploader";
-import SubmitButton from "../SubmitButton";
-import { Label } from "../ui/label";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { SelectItem } from "../ui/select";
-import { FormFieldType } from "./PatientForm";
 
 const RegisterForm = ({ user }: { user: User }) => {
   const router = useRouter();
@@ -86,9 +88,15 @@ const RegisterForm = ({ user }: { user: User }) => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-12 flex-1"
       >
-        <section className="space-y-4">
-          <h1 className="header">Welcome {user?.name} 👋</h1>
-          <p className="text-dark-700">Let us know more about you.</p>
+        <section className="flex gap-4 flex-col lg:flex-row lg:justify-between">
+          <section className="space-y-4">
+            <h1 className="header">Welcome {user?.name} 👋</h1>
+            <p className="text-dark-700">Let us know more about you.</p>
+          </section>
+
+          <Button variant="outline" className="shad-primary-btn" asChild>
+            <Link href={`/patients/${user.$id}`}>Return to Dashboard</Link>
+          </Button>
         </section>
 
         <section className="space-y-6">
@@ -346,7 +354,7 @@ const RegisterForm = ({ user }: { user: User }) => {
 
         {error && <p className="shad-error">{error}</p>}
 
-        <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
+        <SubmitButton isLoading={isLoading}>Create Record</SubmitButton>
       </form>
     </Form>
   );

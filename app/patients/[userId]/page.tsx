@@ -3,14 +3,16 @@ import { DataTable } from "@/components/table/DataTable";
 import { userColumns } from "@/components/table/userColumns";
 import { Button } from "@/components/ui/button";
 import { getUserAppointmentList } from "@/lib/actions/appointment.actions";
-import { getUser } from "@/lib/actions/patient.actions";
+import { getPatient, getUser } from "@/lib/actions/patient.actions";
+import { LogOut } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 const Dashboard = async ({ params: { userId } }: SearchParamProps) => {
-  const [user, appointments] = await Promise.all([
+  const [user, appointments, patient] = await Promise.all([
     getUser(userId),
     getUserAppointmentList(userId),
+    getPatient(userId),
   ]);
 
   const userName = user?.name.split(" ")[0];
@@ -30,7 +32,12 @@ const Dashboard = async ({ params: { userId } }: SearchParamProps) => {
           />
         </Link>
 
-        <p className="text-16-semibold">Personal Dashboard</p>
+        <section className="flex gap-3 items-center">
+          <p className="text-16-semibold !italic">Patient&apos;s Dashboard</p>
+          <Link href="/login" className="cursor-pointer">
+            <LogOut />
+          </Link>
+        </section>
       </header>
 
       <main className="admin-main">
@@ -42,11 +49,20 @@ const Dashboard = async ({ params: { userId } }: SearchParamProps) => {
             </p>
           </section>
 
-          <Button variant="outline" className="shad-primary-btn" asChild>
-            <Link href={`/patients/${userId}/new-appointment`}>
-              New Appointment
-            </Link>
-          </Button>
+          <section className="flex gap-3 flex-wrap">
+            <Button variant="outline" className="shad-primary-btn" asChild>
+              <Link href={`/patients/${userId}/new-appointment`}>
+                New Appointment
+              </Link>
+            </Button>
+            {!patient && (
+              <Button variant="outline" className="shad-primary-btn" asChild>
+                <Link href={`/patients/${userId}/register`}>
+                  Create Patient&apos;s file
+                </Link>
+              </Button>
+            )}
+          </section>
         </section>
 
         <section className="admin-stat">

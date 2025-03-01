@@ -33,9 +33,9 @@ const LoginForm = () => {
     try {
       const user = await loginUser(email);
 
-      if (!user) throw new Error("User not found.");
+      const userId = user.userId || user.$id;
 
-      router.push(`/patients/${user.userId}`);
+      router.push(`/patients/${userId}`);
     } catch (error: any) {
       setError(error.message);
     } finally {
